@@ -7,7 +7,7 @@ const app = express();
 app.use(cors()); // Allow all origins
 
 const BOT_TOKEN = '8054957912:AAEq2BinuoOEYXR3evTxjyrq2G2XTylQJ6o';
-const SECRET_KEY = crypto.createHash("sha256").update(BOT_TOKEN).digest();
+const SECRET_KEY = crypto.createHmac("sha256", "WebAppData").update(BOT_TOKEN).digest();
 
 function checkTelegramAuth(query) {
     const authData = Object.entries(query)
@@ -17,8 +17,10 @@ function checkTelegramAuth(query) {
         .join("\n");
 
     const hmac = crypto.createHmac("sha256", SECRET_KEY).update(authData).digest("hex");
+
     return hmac === query.hash;
 }
+
 
 app.get("/", (req, res) => {
     res.send("Server is running properly!");
@@ -32,5 +34,5 @@ app.get("/auth", (req, res) => {
     }
 });
 
-const PORT = 5000;
+const PORT = 3000;
 app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
